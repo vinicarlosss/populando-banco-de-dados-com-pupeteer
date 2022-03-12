@@ -8,12 +8,19 @@ async function connect(){
     return connection
 }
 
-async function insertEmpresa(empresa,ebit,valor,divida){
+function calculaEarningYeld(ebit,valor_mercado,divida_liquida){
+    let ey = ebit/(valor_mercado+divida_liquida)*100;
+    return ey.toFixed(2)
+}
+
+async function insertEmpresa(ticker,nome_empresa,ebit,valor,divida){
+    const conn = await connect();
     const sql = 'INSERT INTO empresa (ticker,nome_empresa,ebit,valor_mercado,divida_liquida) VALUES(?,?,?,?,?);'
-    const values = [empresa[i][0], empresa[i][1], ebit, (resultado[2].value/1000000).toFixed(2), (resultado[9].value/1000000).toFixed(2)];
+    const values = [ticker,nome_empresa, ebit,valor , divida];
     await conn.query(sql,values);
+    let ey = calculaEarningYeld(ebit, valor,divida);
     const sql2 = 'INSERT INTO ranking (ticker,nome_empresa,earning_yeld) VALUES(?,?,?);'
-    const values2 = [empresa[i][0],empresa[i][1],ey];
+    const values2 = [ticker,nome_empresa,ey];
     await conn.query(sql2,values2);
 };
 

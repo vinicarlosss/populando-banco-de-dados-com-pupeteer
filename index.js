@@ -70,13 +70,13 @@ const empresas = [["CGRA4", "grazziotin"],
 ["TECN3", "technos"],
 ["VIVA3", "Vivara"], 
 ["CEDO4", "Cedo Textil"], 
-//["PTNT4", "Petenatti"],
+["PTNT4", "Petenatti"],
 ["SGPS3", "Springs"], 
 ["HGTX3", "Hering"], 
 ["TFCO4", "Track & Field"], 
 ["UCAS3", "Unicasa"], 
 ["SOJA3", "Boa Safra"], 
-//["AGRO3", "brasilagro"], 
+["AGRO3", "brasilagro"], 
 ["TESA3", "Terra santa"], 
 ["JALL3", "Jalles Machado"], 
 ["SMTO3", "São martinho"], 
@@ -162,7 +162,7 @@ function tratarNumero(valor){
     valor = valor.replaceAll(",",".")
     return valor
 }
-async function webScraping(ticker){
+async function webScraping(ticker,nome_empresa){
     const browser = await puppeteer.launch({headless:false});
     const page = await browser.newPage();
     await page.goto(`https://statusinvest.com.br/acoes/${ticker}`);
@@ -180,12 +180,10 @@ async function webScraping(ticker){
             }
         });
         await browser.close();
-        let ebit = parseFloat(tratarNumero(RESULTADO.ebit)).toFixed(2)
-        let valor = (tratarNumero(RESULTADO.valor)/1000000).toFixed(2)
-        let divida =(tratarNumero(RESULTADO.divida)/1000000).toFixed(2)
-        console.log(ebit);
-        console.log(valor);
-        console.log(divida);
+        let ebit = parseFloat(tratarNumero(RESULTADO.ebit));
+        let valor = parseFloat((tratarNumero(RESULTADO.valor)/1000000).toFixed(2));
+        let divida = parseFloat((tratarNumero(RESULTADO.divida)/1000000).toFixed(2));
+        db.insertEmpresa(ticker,nome_empresa,ebit,valor,divida);
     }else{
         console.log("Não há dados do período.");
         await browser.close();
@@ -195,6 +193,6 @@ async function webScraping(ticker){
 
 (async()=>{
     for(let i = 0; i<empresas.length;i++){
-        await webScraping(empresas[i][0]);
+        await webScraping(empresas[i][0],empresas[i][1]);
     }
 })();
