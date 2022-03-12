@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/vinicarlosss/populando-banco-de-dados-com-pupeteer#readme",
   "dependencies": {
+    "mysql2": "^2.3.3",
     "puppeteer": "^13.5.1"
   }
 }
