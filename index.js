@@ -192,7 +192,10 @@ async function webScraping(ticker,nome_empresa){
 }
 
 (async()=>{
+    let counter = 0;
     for(let i = 0; i<empresas.length;i++){
         await webScraping(empresas[i][0],empresas[i][1]);
+        ++counter;
+        console.log(counter)
     }
 })();

@@ -3,7 +3,7 @@ const mysql = require("mysql2/promise");
 async function connect(){
     if(global.connection && global.connection.state !== 'disconnected')
         return global.connection;
-    const connection = await mysql.createConnection("mysql://root:1998ronca@localhost:3306/formula_magica");
+    const connection = await mysql.createConnection("mysql://b1d4f0ec0ee3c3:e2af0b91@us-cdbr-east-05.cleardb.net/heroku_d2b26af3cebeb1b?reconnect=true");
     global.connection = connection;
     return connection
 }
