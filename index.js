@@ -93,7 +93,7 @@ const empresas = [["CGRA4", "grazziotin"],
 ["CYRE3", "Cyrela"], 
 ["HBRE3", "Realty empreendimentos"],
 ["IGTA3", "iguatemi"], 
-["JPSA3", "Jereissati"], 
+["IGTI3", "Jereissati"], 
 ["LOGG3", "log comercial"], 
 ["MULT3", "Multiplan"],
 ["SCAR3", "São Carlos"], 
@@ -111,7 +111,6 @@ const empresas = [["CGRA4", "grazziotin"],
 ["OPCT3", "Oceanpact"], 
 ["CSAN3", "Cosan"], 
 ["PRIO3", "Petro Rio"], 
-["BRDT3", "Petrobras Distribuidora"], 
 ["RECV3", "Petroreconcavo"], 
 ["UGPA3", "Ultrapar"], 
 ["BLAU3", "Blau Farmaceutica"], 
@@ -171,7 +170,7 @@ async function webScraping(ticker,nome_empresa){
     const PERIODO = await page.evaluate(()=>{
         return document.querySelector(".table-info-body.small").children[0].children[0].children[0].children[1].children[0].innerHTML
     })
-    if(PERIODO == "1T2021 - 4T2021"){
+    if(PERIODO == "2T2021 - 1T2022"){
         const RESULTADO =  await page.evaluate(()=>{
             return {
                 ebit:document.querySelectorAll('.level-0.value.text-right.DATA.timeType-1')[6].children[0].innerHTML,
