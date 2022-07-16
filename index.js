@@ -150,7 +150,6 @@ const empresas = [["CGRA4", "grazziotin"],
 ["POWE3", "Power"], 
 ["NEOE3", "Neoenergia"],
 ["OMGE3", "Omega"]];
-
 async function rolarFim(page){
     await page.evaluate(() => {
         return window.scrollTo(0,9500)
@@ -190,11 +189,61 @@ async function webScraping(ticker,nome_empresa){
 
 }
 
-(async()=>{
-    let counter = 0;
-    for(let i = 0; i<empresas.length;i++){
-        await webScraping(empresas[i][0],empresas[i][1]);
-        ++counter;
-        console.log(counter)
+async function webScrapingUpdate(ticker,nome_empresa){
+    const browser = await puppeteer.launch({headless:false});
+    const page = await browser.newPage();
+    await page.goto(`https://statusinvest.com.br/acoes/${ticker}`);
+    await rolarFim(page)
+    await page.waitForSelector('.level-0.value.text-right.DATA.timeType-1');
+    const PERIODO = await page.evaluate(()=>{
+        return document.querySelector(".table-info-body.small").children[0].children[0].children[0].children[1].children[0].innerHTML
+    })
+    if(PERIODO == "2T2021 - 1T2022"){
+        const RESULTADO =  await page.evaluate(()=>{
+            return {
+                ebit:document.querySelectorAll('.level-0.value.text-right.DATA.timeType-1')[6].children[0].innerHTML,
+                valor: document.querySelectorAll('.top-info.info-3.sm.d-flex.justify-between.mb-3')[0].children[6].children[0].children[0].children[2].innerHTML,
+                divida: document.querySelector(".top-info.info-3.sm.d-flex.justify-between.mb-3").children[5].children[0].children[0].children[2].innerHTML
+            }
+        });
+        await browser.close();
+        let ebit = parseFloat(tratarNumero(RESULTADO.ebit));
+        let valor = parseFloat((tratarNumero(RESULTADO.valor)/1000000).toFixed(2));
+        let divida = parseFloat((tratarNumero(RESULTADO.divida)/1000000).toFixed(2));
+        db.updateEmpresa(ticker,nome_empresa,ebit,valor,divida);
+    }else{
+        console.log("Não há dados do período.");
+        await browser.close();
     }
-})();
+
+}
+
+const readline = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
+  })
+  readline.question(`O que você deseja fazer?`, e => {
+    let escolha = e;
+    if(escolha == 1){
+        (async()=>{
+            let counter = 0;
+            for(let i = 0; i<empresas.length;i++){
+                await webScraping(empresas[i][0],empresas[i][1]);
+                ++counter;
+                console.log(counter)
+            }
+        })();
+    }else if(escolha==2){
+        (async()=>{
+            let counter = 0;
+            for(let i = 0; i<empresas.length;i++){
+                await webScrapingUpdate(empresas[i][0],empresas[i][1]);
+                ++counter;
+                console.log(counter)
+            }
+        })();
+    }else{
+        console.log("Opção inválida")
+    }
+    readline.close()
+  });

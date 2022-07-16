@@ -24,4 +24,15 @@ async function insertEmpresa(ticker,nome_empresa,ebit,valor,divida){
     await conn.query(sql2,values2);
 };
 
-module.exports = {insertEmpresa}
+async function updateEmpresa(ticker,nome_empresa,ebit,valor,divida){
+    const conn = await connect();
+    const sql = `UPDATE empresa SET nome_empresa = '${nome_empresa}', ebit = ${ebit}, valor_mercado=${valor}, divida_liquida=${divida} WHERE ticker= '${ticker}' ;`
+    const values = [ticker,nome_empresa, ebit,valor , divida];
+    await conn.query(sql,values);
+    let ey = calculaEarningYeld(ebit, valor,divida);
+    const sql2 =  `UPDATE ranking SET nome_empresa='${nome_empresa}', earning_yeld=${ey} WHERE ticker= '${ticker}';`
+    const values2 = [ticker,nome_empresa,ey];
+    await conn.query(sql2,values2);
+};
+
+module.exports = {insertEmpresa,updateEmpresa}
