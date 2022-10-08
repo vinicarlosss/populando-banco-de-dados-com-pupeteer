@@ -2,6 +2,10 @@ const puppeteer = require('puppeteer');
 const db = require("./db");
 const empresas = [["CGRA4", "grazziotin"],
 ["ENAT3", "enauta"],
+['VIIA3', 'VIA S.A'],
+["FESA4","FERBASA"],
+["LVTC3", "LIVETECH DA BAHIA INDUSTRIA E COMERCIO S.A"],
+["LEVE3", "MAHLE-METAL LEVE"],
 ["JHSF3", "jhsf participacoes"],
 ["ODPV3", "odontoprev"],
  ["SAPR4", "sanepar"],
@@ -169,7 +173,7 @@ async function webScraping(ticker,nome_empresa){
     const PERIODO = await page.evaluate(()=>{
         return document.querySelector(".table-info-body.small").children[0].children[0].children[0].children[1].children[0].innerHTML
     })
-    if(PERIODO == "2T2021 - 1T2022"){
+    if(PERIODO == "3T2021 - 2T2022"){
         const RESULTADO =  await page.evaluate(()=>{
             return {
                 ebit:document.querySelectorAll('.level-0.value.text-right.DATA.timeType-1')[6].children[0].innerHTML,
@@ -198,7 +202,7 @@ async function webScrapingUpdate(ticker,nome_empresa){
     const PERIODO = await page.evaluate(()=>{
         return document.querySelector(".table-info-body.small").children[0].children[0].children[0].children[1].children[0].innerHTML
     })
-    if(PERIODO == "2T2021 - 1T2022"){
+    if(PERIODO == "3T2021 - 2T2022"){
         const RESULTADO =  await page.evaluate(()=>{
             return {
                 ebit:document.querySelectorAll('.level-0.value.text-right.DATA.timeType-1')[6].children[0].innerHTML,
