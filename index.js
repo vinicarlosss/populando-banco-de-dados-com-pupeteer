@@ -173,7 +173,7 @@ async function webScraping(ticker,nome_empresa){
     const PERIODO = await page.evaluate(()=>{
         return document.querySelector(".table-info-body.small").children[0].children[0].children[0].children[1].children[0].innerHTML
     })
-    if(PERIODO == "3T2021 - 2T2022"){
+    if(PERIODO == "4T2021 - 3T2022"){
         const RESULTADO =  await page.evaluate(()=>{
             return {
                 ebit:document.querySelectorAll('.level-0.value.text-right.DATA.timeType-1')[6].children[0].innerHTML,
@@ -202,7 +202,7 @@ async function webScrapingUpdate(ticker,nome_empresa){
     const PERIODO = await page.evaluate(()=>{
         return document.querySelector(".table-info-body.small").children[0].children[0].children[0].children[1].children[0].innerHTML
     })
-    if(PERIODO == "3T2021 - 2T2022"){
+    if(PERIODO == "4T2021 - 3T2022"){
         const RESULTADO =  await page.evaluate(()=>{
             return {
                 ebit:document.querySelectorAll('.level-0.value.text-right.DATA.timeType-1')[6].children[0].innerHTML,
@@ -234,7 +234,7 @@ const readline = require('readline').createInterface({
             for(let i = 0; i<empresas.length;i++){
                 await webScraping(empresas[i][0],empresas[i][1]);
                 ++counter;
-                console.log(counter)
+                console.log(counter+` empresa: ${empresas[i][0]}`)
             }
         })();
     }else if(escolha==2){
@@ -243,7 +243,7 @@ const readline = require('readline').createInterface({
             for(let i = 0; i<empresas.length;i++){
                 await webScrapingUpdate(empresas[i][0],empresas[i][1]);
                 ++counter;
-                console.log(counter)
+                console.log(counter+` empresa:${empresas[i][0]}`)
             }
         })();
     }else{
